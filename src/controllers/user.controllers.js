@@ -53,7 +53,7 @@ export const updateUser = async (req, res) => {
         const { id } = req.params;
         const { name, email, password } = req.body;
 
-        const user = await user_models.findByPk(id);
+        const user = await user_models.findByPk(id); 
         if (!name || !email || !password){
             return res.status(400).json({ error: "Faltan datos obligatorios." });
         }

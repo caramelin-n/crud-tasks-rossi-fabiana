@@ -9,7 +9,7 @@ const isNameUnique = async (title) => {
 export const createTask = async (req, res) => {
     try {
         const { title, description, isComplete } = req.body;
-        if(!title || !description || !isComplete ){
+        if(!title || !description || typeof isComplete !== "boolean"){
             return res.status(400).json({ Error: "Faltan datos obligatorios." });
         }
 
@@ -55,11 +55,7 @@ export const updateTask = async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, isComplete } = req.body;
-
         const task = await task_models.findByPk(id);
-        if (!title || !description || !isComplete){
-            return res.status(400).json({ error: "Faltan datos obligatorios." });
-        }
         if (!(await isNameUnique(title))){
             return res.status(400).json({ error: "El título de la tarea ya existe en la base de datos." });
         }
