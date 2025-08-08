@@ -60,8 +60,8 @@ export const updateUser = async (req, res) => {
         if (!(await isEmailUnique(email))){
             return res.status(400).json({ error: "El título de la tarea ya existe en la base de datos." });
         }
-        if (!task){
-            return res.status(404).json({ error: "La tarea no existe en la base de datos." });
+        if (!user){
+            return res.status(404).json({ error: "El usuario no existe en la base de datos." });
         }
  
         await user_models.update(req.body, { where: { id } });
