@@ -11,10 +11,10 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send(task_models, user_models);
-})
+});
 
-app.use('/api', routes);
-app.use('/api', userRoutes);
+app.use('/api/tasks', routes);
+app.use('/api/users', userRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor corriendo en el puerto ${port}`);

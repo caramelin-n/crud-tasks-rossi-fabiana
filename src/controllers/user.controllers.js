@@ -1,5 +1,6 @@
 import user_models from "../models/user.models.js";
 import chalk from "chalk";
+import task_models from "../models/task.models.js";
 
 const isEmailUnique = async (email) => {
     const uniquemail = await user_models.findOne({ where: { name: email }});
@@ -27,7 +28,12 @@ export const createUser = async (req, res) => {
 };
 export const getAllUsers = async (req, res) => {
     try {
-        const user = await user_models.findAll();
+        const user = await user_models.findAll({
+            include: { model: task_models,
+                attributes: { exclude: ["user_id"] }
+             }
+        }
+        );
         res.status(200).json(user);
     } catch (error) {
         console.error(chalk.redBright("Error interno en el servidor."));
@@ -37,7 +43,11 @@ export const getAllUsers = async (req, res) => {
 };
 export const getUserById = async (req, res) => {
     try {
-        const user = await user_models.findByPk(req.params.id);
+        const user = await user_models.findByPk(req.params.id, {
+            include: { model: task_models,
+                attributes: { exclude: ["user_id"] }
+            }
+        });
         if(!user){
             return res.status(404).json({ Error: "El usuario no existe en la base de datos." });
         }

@@ -1,4 +1,5 @@
 import task_models from "../models/task.models.js";
+import user_models from "../models/user.models.js";
 import chalk from "chalk";
 
 const isNameUnique = async (title) => {
@@ -8,9 +9,16 @@ const isNameUnique = async (title) => {
 
 export const createTask = async (req, res) => {
     try {
-        const { title, description, isComplete } = req.body;
+        const { title, description, isComplete, user_id } = req.body;
         if(!title || !description || typeof isComplete !== "boolean"){
             return res.status(400).json({ Error: "Faltan datos obligatorios." });
+        }
+        if(!user_id){
+            return res.status(400).json({ error: "La tarea debe pertenecer a un usuario." })
+        }
+        const user = await user_models.findByPk(user_id);
+        if (!user){
+            return res.status(404).json({ error: "Usuario no encontrado" });
         }
 
         if(!(await isNameUnique(title))){
@@ -19,7 +27,7 @@ export const createTask = async (req, res) => {
         if (isComplete !== true && isComplete !== false){
             return res.status(400).json({ error: "El estado de la tarea sólo puede ser un valor booleano (true o false)" });
         }
-        const task = await task_models.create({ title, description, isComplete });
+        const task = await task_models.create({ title, description, isComplete, user_id });
         res.status(201).json(task);
         
     } catch (error) {
@@ -30,7 +38,11 @@ export const createTask = async (req, res) => {
 };
 export const getAllTasks = async (req, res) => {
     try {
-        const task = await task_models.findAll();
+        const task = await task_models.findAll({
+            attributes: { exclude: "user_id" },
+            include: { model: user_models,
+                attributes: { exclude: ["password", "email"] } }
+        });
         res.status(200).json(task);
     } catch (error) {
         console.error(chalk.redBright("Error interno en el servidor."));
@@ -40,7 +52,11 @@ export const getAllTasks = async (req, res) => {
 };
 export const getTaskById = async (req, res) => {
     try {
-        const task = await task_models.findByPk(req.params.id);
+        const task = await task_models.findByPk(req.params.id, {
+            include: { model: user_models,
+                attributes: { exclude: ["password", "email"] }
+             }
+        });
         if(!task){
             return res.status(404).json({ Error: "La tarea no existe en la base de datos." });
         }
