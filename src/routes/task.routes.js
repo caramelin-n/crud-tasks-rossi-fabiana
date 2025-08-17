@@ -19,9 +19,9 @@ router.get('/tasks', async (req, res) => {
     }
 });
 
-router.get('/tasks/:id', getTaskById);
-router.post('/tasks', createTask);
-router.put('/tasks/:id', updateTask);
-router.delete('/tasks/:id', deleteTask);
+router.get('/:id', getTaskById);
+router.post('/', createTask);
+router.put('/:id', updateTask);
+router.delete('/:id', deleteTask);
 
 export default router;

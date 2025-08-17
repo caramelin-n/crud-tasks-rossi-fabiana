@@ -13,9 +13,6 @@ export const createTask = async (req, res) => {
         if(!title || !description || typeof isComplete !== "boolean"){
             return res.status(400).json({ Error: "Faltan datos obligatorios." });
         }
-        if(!user_id){
-            return res.status(400).json({ error: "La tarea debe pertenecer a un usuario." })
-        }
         const user = await user_models.findByPk(user_id);
         if (!user){
             return res.status(404).json({ error: "Usuario no encontrado" });
