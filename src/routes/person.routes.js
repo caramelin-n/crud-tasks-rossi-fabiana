@@ -5,13 +5,13 @@ import { getAllPeople,
     updatePerson,
     deletePerson
  } from "../controllers/person.controllers.js";
-import { person_models } from "../models/person.models.js";
+import { PersonModel } from "../models/person.models.js";
 
 const router = Router();
 
 router.get('/people', async (req, res) => {
     try {
-        const person = await person_models.findAll();
+        const person = await PersonModel.findAll();
         res.json(person);
     } catch (error) {
         res.status(500).json(error);

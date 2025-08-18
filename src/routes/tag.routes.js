@@ -5,13 +5,13 @@ import { getAllTags,
     updateTag,
     deleteTag
  } from "../controllers/tag.controllers.js";
-import { tag_models } from "../models/tag.models.js";
+import { TagModel } from "../models/tag.models.js";
 
 const router = Router();
 
 router.get('/tags', async (req, res) => {
     try {
-        const tag = await tag_models.findAll();
+        const tag = await TagModel.findAll();
         res.json(tag);
     } catch (error) {
         res.status(500).json(error)

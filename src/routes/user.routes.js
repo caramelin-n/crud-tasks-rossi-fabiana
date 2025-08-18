@@ -6,13 +6,13 @@ import {
     updateUser,
     deleteUser
 } from "../controllers/user.controllers.js";
-import user_models from "../models/user.models.js";
+import UserModel from "../models/user.models.js";
 
 const router = Router();
 
 router.get('/', async (req, res) => {
     try {
-        const user = await user_models.findAll();
+        const user = await UserModel.findAll();
         res.json(user);
     } catch (error) {
         res.status(500).json(error);

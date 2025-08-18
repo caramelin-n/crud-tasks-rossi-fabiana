@@ -1,9 +1,9 @@
-import { person_models } from "../models/person.models.js";
+import { PersonModel } from "../models/person.models.js";
 import chalk from "chalk";
-import user_models from "../models/user.models.js";
+import UserModel from "../models/user.models.js";
 
 const isNameUnique = async (name) => {
-    const person = await person_models.findOne({ where: { name: name }});
+    const person = await PersonModel.findOne({ where: { name: name }});
     return person === null;
 };
 
@@ -13,7 +13,7 @@ export const createPerson = async (req, res) => {
         if (!name || !lastname || !gender) {
             return res.status(400).json({ error: "Faltan datos obligatorios." })
         }
-        const user = await user_models.findByPk(user_id);
+        const user = await UserModel.findByPk(user_id);
         if (!user){
             return res.status(404).json({ error: "Usuario no encontrado" })
         }
@@ -23,7 +23,7 @@ export const createPerson = async (req, res) => {
         if (gender !== "Male" && gender !== "female"){
             return res.status(400).json({ error: "El género debe ser male o female." });
         }
-        const person = await person_models.create({ name, lastname, gender, user_id });
+        const person = await PersonModel.create({ name, lastname, gender, user_id });
         res.status(201).json(person);
     } catch (error) {
         res.status(500).json({ error: "Error interno en el servidor" });
@@ -35,7 +35,7 @@ export const updatePerson = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, lastname, gender } = req.body;
-        const person = await person_models.findByPk(id);
+        const person = await PersonModel.findByPk(id);
         if(!(await isNameUnique(name))){
             return res.status(400).json({ error: "El nombre de la persona debe ser único." });
         }
@@ -45,7 +45,7 @@ export const updatePerson = async (req, res) => {
         if (gender !== "male" && gender !== "female"){
             return res.status(400).json({ error: "El género debe ser male o female." });
         }
-        await person_models.update(req.body, { where: { id } });
+        await PersonModel.update(req.body, { where: { id } });
         res.status(200).json({ message: "La persona ha sido actualizada correctamente" }, person);
     } catch (error) {
         res.status(500).json({ error: "Error interno en el servidor" });
@@ -55,9 +55,9 @@ export const updatePerson = async (req, res) => {
 }
 export const getAllPeople = async (req, res) => {
     try {
-        const people = await person_models.findAll({
+        const people = await PersonModel.findAll({
             attributes: { exclude: "user_id" },
-            include: { model: user_models,
+            include: { model: UserModel,
                 attributes: { exclude: ["password", "email"] }
              }
         });
@@ -70,8 +70,8 @@ export const getAllPeople = async (req, res) => {
 }
 export const getPersonById = async (req, res) => {
     try {
-        const person = await person_models.findByPk(req.params.id, {
-            include: { model: user_models,
+        const person = await PersonModel.findByPk(req.params.id, {
+            include: { model: UserModel,
                 attributes: { exclude: ["password", "email"] }
              }
         });
@@ -88,11 +88,11 @@ export const getPersonById = async (req, res) => {
 export const deletePerson = async (req, res) => {
     try {
         const { id } = req.params;
-        const person = person_models.findByPk(id);
+        const person = PersonModel.findByPk(id);
         if(!person){
             return res.status(404).json({ error: "La persona no existe en la base de datos." });
         }
-        await person_models.destroy({ where: { id } });
+        await PersonModel.destroy({ where: { id } });
         res.status(200).json({ message: "La tarea se eliminó con éxito." });
     } catch (error) {
         res.status(500).json({ error: "Error interno en el servidor" });

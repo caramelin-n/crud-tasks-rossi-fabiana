@@ -1,9 +1,9 @@
-import user_models from "../models/user.models.js";
+import UserModel from "../models/user.models.js";
 import chalk from "chalk";
-import task_models from "../models/task.models.js";
+import TaskModel from "../models/task.models.js";
 
 const isEmailUnique = async (email) => {
-    const uniquemail = await user_models.findOne({ where: { name: email }});
+    const uniquemail = await UserModel.findOne({ where: { name: email }});
     return uniquemail === null;
 }
 
@@ -17,7 +17,7 @@ export const createUser = async (req, res) => {
         if(!(await isEmailUnique(email))){
             return res.status(400).json({ error: "El correo ya existe en la base de datos." });
         }
-        const user = await user_models.create({ name, email, password });
+        const user = await UserModel.create({ name, email, password });
         res.status(201).json(user);
         
     } catch (error) {
@@ -28,8 +28,8 @@ export const createUser = async (req, res) => {
 };
 export const getAllUsers = async (req, res) => {
     try {
-        const user = await user_models.findAll({
-            include: { model: task_models,
+        const user = await UserModel.findAll({
+            include: { model: TaskModel,
                 attributes: { exclude: ["user_id"] }
              }
         }
@@ -43,8 +43,8 @@ export const getAllUsers = async (req, res) => {
 };
 export const getUserById = async (req, res) => {
     try {
-        const user = await user_models.findByPk(req.params.id, {
-            include: { model: task_models,
+        const user = await UserModel.findByPk(req.params.id, {
+            include: { model: TaskModel,
                 attributes: { exclude: ["user_id"] }
             }
         });
@@ -63,7 +63,7 @@ export const updateUser = async (req, res) => {
         const { id } = req.params;
         const { name, email, password } = req.body;
 
-        const user = await user_models.findByPk(id); 
+        const user = await UserModel.findByPk(id); 
         if (!name || !email || !password){
             return res.status(400).json({ error: "Faltan datos obligatorios." });
         }
@@ -74,7 +74,7 @@ export const updateUser = async (req, res) => {
             return res.status(404).json({ error: "El usuario no existe en la base de datos." });
         }
  
-        await user_models.update(req.body, { where: { id } });
+        await UserModel.update(req.body, { where: { id } });
         res.status(200).json({ message: "El usuario ha sido actualizado con éxito" }, user);        
     } catch (error) {
         console.error(chalk.redBright("Error interno en el servidor."));
@@ -85,11 +85,11 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = user_models.findByPk(id);
+        const user = UserModel.findByPk(id);
         if (!user){
             return res.status(404).json({ Error: "El usuario no existe en la base de datos" });
         }
-        await user_models.destroy({ where: { id } });
+        await UserModel.destroy({ where: { id } });
         res.status(200).json({ message: "El usuario se eliminó con éxito." });
     } catch (error) {
         console.error(chalk.redBright("Error interno en el servidor."));
