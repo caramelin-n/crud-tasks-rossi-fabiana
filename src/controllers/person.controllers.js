@@ -1,6 +1,6 @@
-import { person_models } from "../models/person.models";
+import { person_models } from "../models/person.models.js";
 import chalk from "chalk";
-import user_models from "../models/user.models";
+import user_models from "../models/user.models.js";
 
 const isNameUnique = async (name) => {
     const person = await person_models.findOne({ where: { name: name }});

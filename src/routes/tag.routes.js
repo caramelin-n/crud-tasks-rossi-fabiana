@@ -4,8 +4,8 @@ import { getAllTags,
     createTag,
     updateTag,
     deleteTag
- } from "../controllers/tag.controllers";
-import { tag_models } from "../models/tag.models";
+ } from "../controllers/tag.controllers.js";
+import { tag_models } from "../models/tag.models.js";
 
 const router = Router();
 

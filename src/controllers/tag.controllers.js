@@ -1,11 +1,6 @@
-import { tag_models } from "../models/tag.models";
+import { tag_models } from "../models/tag.models.js";
 import chalk from "chalk";
-import task_models from "../models/task.models";
-
-const isNameUnique = async (name) => {
-    const tags = tag_models.findOne({ where: { name: name } });
-    return tags === null;
-};
+import task_models from "../models/task.models.js";
 
 export const createTag = async (req, res) => {
     try {
@@ -13,12 +8,9 @@ export const createTag = async (req, res) => {
         if(!name || !description){
             return res.status(400).json({ error: "Faltan datos obligatorios." });
         }
-        const task = await task_models.findByPk(user_id);
+        const task = await task_models.findByPk(task_id);
         if(!task){
             return res.status(404).json({ error: "La tarea no existe en la base de datos." });
-        }
-        if(!(await isNameUnique(name))){
-            return res.status(400).json({ error: "El nombre de la etiqueta debe ser único." })
         }
         const tag = await tag_models.create({ name, description, task_id });
         res.status(201).json(tag);
@@ -65,9 +57,6 @@ export const updateTag = async (req, res) => {
         const { id } = req.params;
         const { name, description } = req.body;
         const tag = await tag_models.findByPk(id);
-        if(!(await isNameUnique(name))){
-            return res.status(400).json({ error: "El título de la etiqueta ya existe en la base de datos." });
-        }
         if (!tag){
             return res.status(404).json({ error: "La etiqueta no existe en la base de datos." })
         }
