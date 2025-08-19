@@ -18,7 +18,7 @@ router.get('/tasks', async (req, res) => {
         res.status(500).json(error);
     }
 });
-
+router.get("/", getAllTasks);
 router.get('/:id', getTaskById);
 router.post('/', createTask);
 router.put('/:id', updateTask);

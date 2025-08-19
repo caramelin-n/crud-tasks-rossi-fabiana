@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import { TagModel } from "./tag.models.js";
 import TaskModel from "./task.models.js";
 
-export const TaskTag = sequelize.define(
+export const TaskTagModel = sequelize.define(
     'task_tag', {
         'id': { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true
         }
@@ -11,6 +11,8 @@ export const TaskTag = sequelize.define(
         timestamps: false
     }
 );
+
+
 
 TaskModel.belongsToMany(TagModel, { through: "task_tag", foreignKey: "task_id", as: "task" });
 TagModel.belongsToMany(TaskModel, { through: "task_tag", foreignKey: "tag_id", as: "tag" });

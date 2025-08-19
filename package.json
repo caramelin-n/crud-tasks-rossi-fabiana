@@ -9,7 +9,6 @@
   "author": "caramelin",
   "type": "module",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "chalk": "^5.5.0",
     "cors": "^2.8.5",
@@ -26,5 +25,6 @@
   "bugs": {
     "url": "https://github.com/caramelin-n/crud-tasks-rossi-fabiana/issues"
   },
-  "homepage": "https://github.com/caramelin-n/crud-tasks-rossi-fabiana#readme"
+  "homepage": "https://github.com/caramelin-n/crud-tasks-rossi-fabiana#readme",
+  "description": ""
 }
