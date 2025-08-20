@@ -16,3 +16,5 @@ export const TaskTagModel = sequelize.define(
 
 TaskModel.belongsToMany(TagModel, { through: "task_tag", foreignKey: "task_id", as: "task" });
 TagModel.belongsToMany(TaskModel, { through: "task_tag", foreignKey: "tag_id", as: "tag" });
+TaskTagModel.belongsTo(TaskModel, { foreignKey: "task_id", as: "task"});
+TaskTagModel.belongsTo(TagModel, { foreignKey: "tag_id", as: "tag" });

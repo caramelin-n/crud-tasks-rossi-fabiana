@@ -29,10 +29,18 @@ export const createTaskTag = async (req, res) => {
 export const getAllTaskTag = async (req, res) => {
     try {
         const taskTag = await TaskTagModel.findAll({
-            include: { model: TaskModel, TagModel,
-                attributes: { exclude: ["description"] }
-             }
+            include: [
+                {
+                    model: TagModel,
+                    as: "tag"
+                },
+                {
+                    model: TaskModel,
+                    as: "task"
+                },
+            ],
         });
+        res.status(200).json(taskTag);
     } catch (error) {
         console.error(chalk.redBright("Ha ocurrido un error interno."));
         console.log(chalk.blueBright("-----------------------------------------"));
